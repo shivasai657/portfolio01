@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Siva Sai Pavan — NetSuite Consultant</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04060a;--s1:#080c12;--card:#0c1018;--border:rgba(255,255,255,0.06);
+  --cyan:#00f5d4;--purple:#9d4edd;--orange:#ff6b35;--green:#06ffa5;
+  --text:#dde4ef;--muted:#556070;--white:#fff;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none}
+
+/* CURSOR */
+#cur{position:fixed;top:0;left:0;width:10px;height:10px;background:var(--cyan);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .25s,height .25s,background .25s;mix-blend-mode:screen}
+#cur-trail{position:fixed;top:0;left:0;width:40px;height:40px;border:1px solid rgba(0,245,212,.35);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%)}
+
+/* NOISE */
+.noise{position:fixed;inset:0;z-index:500;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* PARTICLES */
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(4,6,10,.8);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);transition:background .3s}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--white);letter-spacing:-.02em}
+.logo em{color:var(--cyan);font-style:normal}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;transition:color .2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--cyan);transition:width .3s}
+.nav-links a:hover{color:var(--cyan)}
+.nav-links a:hover::after{width:100%}
+.pill{display:flex;align-items:center;gap:.45rem;background:rgba(6,255,165,.07);border:1px solid rgba(6,255,165,.2);padding:.3rem .9rem;border-radius:100px;font-family:'Space Mono',monospace;font-size:.62rem;color:var(--green)}
+.pill::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:bpulse 1.6s infinite}
+@keyframes bpulse{0%,100%{box-shadow:0 0 0 0 rgba(6,255,165,.5)}50%{box-shadow:0 0 0 5px rgba(6,255,165,0)}}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:8rem 2.5rem 4rem;position:relative;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;transition:transform .1s}
+.orb1{width:500px;height:500px;background:radial-gradient(circle,rgba(0,245,212,.12),transparent 70%);top:15%;left:5%;animation:orbF 8s ease-in-out infinite}
+.orb2{width:400px;height:400px;background:radial-gradient(circle,rgba(157,78,221,.1),transparent 70%);top:25%;right:5%;animation:orbF 10s ease-in-out infinite reverse}
+.orb3{width:300px;height:300px;background:radial-gradient(circle,rgba(255,107,53,.07),transparent 70%);bottom:15%;left:35%;animation:orbF 12s ease-in-out infinite 2s}
+@keyframes orbF{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.08)}}
+
+.hero-eyebrow{display:inline-flex;align-items:center;gap:.6rem;font-family:'Space Mono',monospace;font-size:.68rem;color:var(--cyan);letter-spacing:.18em;text-transform:uppercase;margin-bottom:1.75rem;opacity:0;animation:slideUp .8s cubic-bezier(.16,1,.3,1) forwards .3s}
+.hero-eyebrow .scr{display:inline-block}
+
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,9vw,8rem);font-weight:800;line-height:.88;letter-spacing:-.05em;color:var(--white);max-width:980px;opacity:0;animation:slideUp .9s cubic-bezier(.16,1,.3,1) forwards .5s}
+.t-fill{background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.t-stroke{color:transparent;-webkit-text-stroke:1px var(--cyan);display:inline-block;animation:strokeC 4s ease-in-out infinite}
+@keyframes strokeC{0%,100%{-webkit-text-stroke-color:var(--cyan)}50%{-webkit-text-stroke-color:var(--purple)}}
+.t-dim{color:var(--muted);font-weight:400;font-size:.5em;letter-spacing:-.01em;display:block;margin-top:.4rem;min-height:1em}
+
+.hero-desc{margin-top:2rem;max-width:460px;color:var(--muted);font-size:.95rem;line-height:1.8;opacity:0;animation:slideUp 1s cubic-bezier(.16,1,.3,1) forwards .7s}
+
+.hero-cta{display:flex;gap:1rem;margin-top:2.5rem;flex-wrap:wrap;opacity:0;animation:slideUp 1s cubic-bezier(.16,1,.3,1) forwards .9s}
+.btn-a{display:inline-flex;align-items:center;gap:.5rem;background:var(--cyan);color:#040609;padding:.8rem 1.8rem;border-radius:3px;font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;text-decoration:none;letter-spacing:.04em;transition:all .25s;position:relative;overflow:hidden}
+.btn-a::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--green),var(--cyan));opacity:0;transition:opacity .3s}
+.btn-a:hover::before{opacity:1}
+.btn-a:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(0,245,212,.4)}
+.btn-a span{position:relative;z-index:1}
+.btn-b{display:inline-flex;align-items:center;gap:.5rem;border:1px solid rgba(255,255,255,.1);color:var(--text);padding:.8rem 1.8rem;border-radius:3px;font-family:'Syne',sans-serif;font-weight:600;font-size:.82rem;text-decoration:none;transition:all .25s;backdrop-filter:blur(8px)}
+.btn-b:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-3px)}
+
+.hero-stats{display:flex;gap:3rem;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);opacity:0;animation:slideUp 1s cubic-bezier(.16,1,.3,1) forwards 1.1s;flex-wrap:wrap}
+.stat-n{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:var(--white);line-height:1}
+.stat-n em{color:var(--cyan);font-style:normal}
+.stat-l{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:.3rem}
+
+/* MARQUEE */
+.marquee-wrap{padding:1.4rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;background:rgba(0,245,212,.02);position:relative;z-index:1}
+.marquee-track{display:flex;gap:3rem;width:max-content;animation:marquee 28s linear infinite}
+.marquee-item{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:.75rem}
+.marquee-item::before{content:'◆';color:var(--cyan);font-size:.5rem}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* SECTIONS */
+section{padding:7rem 2.5rem;position:relative;z-index:1}
+.s-label{font-family:'Space Mono',monospace;font-size:.63rem;color:var(--cyan);letter-spacing:.2em;text-transform:uppercase;display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
+.s-label::after{content:'';width:48px;height:1px;background:linear-gradient(to right,var(--cyan),transparent)}
+.s-title{font-family:'Syne',sans-serif;font-size:clamp(2.2rem,5vw,4rem);font-weight:800;color:var(--white);letter-spacing:-.04em;line-height:1;margin-bottom:.75rem}
+.s-sub{color:var(--muted);font-size:.92rem;max-width:480px;line-height:1.8;margin-bottom:3.5rem}
+
+/* ABOUT */
+#about{background:var(--s1)}
+.about-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:4rem;align-items:start}
+.big-text{font-family:'Syne',sans-serif;font-size:clamp(.95rem,1.8vw,1.15rem);color:var(--text);line-height:1.8;font-weight:400}
+.big-text strong{color:var(--cyan)}
+.about-right{display:flex;flex-direction:column;gap:1.2rem}
+.a-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.4rem 1.6rem;position:relative;overflow:hidden;transition:all .35s cubic-bezier(.16,1,.3,1)}
+.a-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,245,212,.04),transparent);opacity:0;transition:opacity .3s}
+.a-card:hover{border-color:rgba(0,245,212,.3);transform:translateX(6px)}
+.a-card:hover::before{opacity:1}
+.a-card-top{display:flex;align-items:center;gap:.7rem;margin-bottom:.5rem}
+.a-icon{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.a-card h4{font-family:'Syne',sans-serif;font-weight:700;color:var(--white);font-size:.88rem}
+.a-card p{color:var(--muted);font-size:.8rem;line-height:1.65}
+
+/* SKILLS */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.2rem}
+.sk-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.6rem;transition:all .4s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden}
+.sk-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--purple));transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.sk-card:hover{transform:translateY(-8px);border-color:rgba(0,245,212,.2);box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.sk-card:hover::after{transform:scaleX(1)}
+.sk-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:.9rem;font-size:1rem}
+.sk-card h4{font-family:'Syne',sans-serif;font-weight:700;color:var(--white);font-size:.85rem;margin-bottom:.85rem}
+.tags{display:flex;flex-wrap:wrap;gap:.38rem}
+.tag{padding:.2rem .62rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:100px;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);transition:all .2s;cursor:default}
+.tag:hover{background:rgba(0,245,212,.08);border-color:rgba(0,245,212,.3);color:var(--cyan);transform:scale(1.05)}
+.tag.hot{background:rgba(0,245,212,.07);border-color:rgba(0,245,212,.2);color:var(--cyan)}
+.skill-bar{height:2px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:.85rem;overflow:hidden}
+.skill-fill{height:100%;border-radius:2px;width:0;transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+
+/* EXPERIENCE */
+#experience{background:var(--s1)}
+.exp-box{max-width:800px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem;position:relative;overflow:hidden}
+.exp-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--purple),var(--orange))}
+.exp-header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem}
+.exp-co{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--white)}
+.exp-role{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--muted);margin-top:.25rem}
+.exp-date{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,245,212,.07);border:1px solid rgba(0,245,212,.2);padding:.35rem .85rem;border-radius:100px;font-family:'Space Mono',monospace;font-size:.65rem;color:var(--cyan)}
+.clients{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.75rem}
+.client{padding:.3rem .9rem;border-radius:5px;font-family:'Space Mono',monospace;font-size:.65rem;font-weight:700;letter-spacing:.05em}
+.c1{background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.25);color:#ff6b35}
+.c2{background:rgba(6,255,165,.1);border:1px solid rgba(6,255,165,.25);color:#06ffa5}
+.exp-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.exp-item{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:8px;padding:.9rem 1rem;transition:all .25s}
+.exp-item:hover{background:rgba(0,245,212,.04);border-color:rgba(0,245,212,.2);transform:translateY(-2px)}
+.exp-item p{font-size:.78rem;color:var(--muted);line-height:1.55;padding-left:1rem;position:relative}
+.exp-item p::before{content:'›';position:absolute;left:0;color:var(--cyan)}
+
+/* PROJECTS */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem}
+.proj-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.75rem;position:relative;overflow:hidden;transition:all .4s cubic-bezier(.16,1,.3,1);cursor:default}
+.proj-card:hover{transform:translateY(-8px) scale(1.01);box-shadow:0 40px 80px rgba(0,0,0,.5)}
+.proj-glow{position:absolute;width:200px;height:200px;border-radius:50%;filter:blur(60px);opacity:0;transition:opacity .4s;pointer-events:none;top:-50px;right:-50px}
+.proj-card:hover .proj-glow{opacity:.12}
+.proj-num{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--cyan);opacity:.5;margin-bottom:.85rem;letter-spacing:.1em}
+.proj-card h3{font-family:'Syne',sans-serif;font-weight:700;color:var(--white);font-size:1rem;margin-bottom:.6rem}
+.proj-card p{color:var(--muted);font-size:.8rem;line-height:1.65;margin-bottom:1.1rem}
+.stack{display:flex;flex-wrap:wrap;gap:.35rem}
+.stk{padding:.18rem .55rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:3px;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted)}
+
+/* CONTACT */
+#contact{background:var(--s1);text-align:center}
+.contact-inner{max-width:600px;margin:0 auto}
+.avail{display:inline-flex;align-items:center;gap:.6rem;background:rgba(6,255,165,.06);border:1px solid rgba(6,255,165,.2);padding:.5rem 1.2rem;border-radius:100px;font-family:'Space Mono',monospace;font-size:.65rem;color:var(--green);margin-bottom:1.5rem}
+.avail::before{content:'';width:7px;height:7px;background:var(--green);border-radius:50%;animation:bpulse 1.6s infinite}
+.c-links{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:2.5rem}
+.c-link{display:flex;align-items:center;gap:.65rem;background:var(--card);border:1px solid var(--border);padding:.9rem 1.5rem;border-radius:8px;text-decoration:none;color:var(--text);font-family:'Space Mono',monospace;font-size:.72rem;transition:all .3s}
+.c-link:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-4px);box-shadow:0 15px 40px rgba(0,0,0,.35)}
+
+/* FOOTER */
+footer{padding:1.75rem 2.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;position:relative;z-index:1}
+footer p{font-family:'Space Mono',monospace;font-size:.63rem;color:var(--muted)}
+footer em{color:var(--cyan);font-style:normal}
+
+/* ANIMATIONS */
+@keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.reveal.on{opacity:1;transform:none}
+.reveal-l{opacity:0;transform:translateX(-40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.reveal-l.on{opacity:1;transform:none}
+.reveal-r{opacity:0;transform:translateX(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.reveal-r.on{opacity:1;transform:none}
+.d1{transition-delay:.05s}.d2{transition-delay:.12s}.d3{transition-delay:.19s}.d4{transition-delay:.26s}.d5{transition-delay:.33s}.d6{transition-delay:.4s}
+
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(--bg);z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;transition:opacity .6s,visibility .6s}
+#loader.hide{opacity:0;visibility:hidden}
+.loader-txt{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--cyan);letter-spacing:.3em;text-transform:uppercase}
+.loader-bar-wrap{width:180px;height:1px;background:rgba(255,255,255,.08);overflow:hidden}
+.loader-bar{height:100%;background:linear-gradient(90deg,var(--cyan),var(--purple));width:0;animation:load 1.5s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes load{to{width:100%}}
+.loader-pct{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--white)}
+.loader-pct em{color:var(--cyan);font-style:normal}
+
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hero,.section{padding-left:1.5rem;padding-right:1.5rem}
+  .about-layout{grid-template-columns:1fr}
+  .exp-grid{grid-template-columns:1fr}
+  .hero-stats{gap:2rem}
+}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-pct" id="loaderNum">0<em>%</em></div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-txt">Loading Portfolio</div>
+</div>
+
+<div id="cur"></div>
+<div id="cur-trail"></div>
+<div class="noise"></div>
+<canvas id="particles"></canvas>
+
+<nav id="nav">
+  <div class="logo">S<em>.</em>Pavan</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="pill">Available Now</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="hero-eyebrow">
+    <span class="scr" id="scr1">NetSuite Technical Consultant</span>
+  </div>
+  <h1 class="hero-title">
+    Building<br/>
+    <span class="t-fill">Enterprise</span><br/>
+    <span class="t-stroke">ERP Solutions</span>
+    <span class="t-dim" id="typed"></span>
+  </h1>
+  <p class="hero-desc">2+ years specializing in NetSuite implementation, SuiteScript customization, and system integrations for Manufacturing &amp; Healthcare industries.</p>
+  <div class="hero-cta">
+    <a href="#experience" class="btn-a mag"><span>View Experience</span> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <a href="#contact" class="btn-b mag">Get In Touch</a>
+  </div>
+  <div class="hero-stats">
+    <div><div class="stat-n"><span class="cnum" data-to="2">0</span><em>+</em></div><div class="stat-l">Years Exp</div></div>
+    <div><div class="stat-n"><span class="cnum" data-to="2">0</span><em>+</em></div><div class="stat-l">Clients</div></div>
+    <div><div class="stat-n"><span class="cnum" data-to="10">0</span><em>+</em></div><div class="stat-l">Technologies</div></div>
+    <div><div class="stat-n"><span class="cnum" data-to="5">0</span><em>+</em></div><div class="stat-l">Integrations</div></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">SuiteScript 2.x</span><span class="marquee-item">Map/Reduce Scripts</span><span class="marquee-item">REST API Integrations</span><span class="marquee-item">SuiteFlow Workflows</span><span class="marquee-item">Advanced PDF Templates</span><span class="marquee-item">SFTP Automation</span><span class="marquee-item">TypeScript</span><span class="marquee-item">NetSuite Dashboards</span><span class="marquee-item">Suitelets</span><span class="marquee-item">SOAP APIs</span><span class="marquee-item">Node.js</span><span class="marquee-item">React.js</span>
+    <span class="marquee-item">SuiteScript 2.x</span><span class="marquee-item">Map/Reduce Scripts</span><span class="marquee-item">REST API Integrations</span><span class="marquee-item">SuiteFlow Workflows</span><span class="marquee-item">Advanced PDF Templates</span><span class="marquee-item">SFTP Automation</span><span class="marquee-item">TypeScript</span><span class="marquee-item">NetSuite Dashboards</span><span class="marquee-item">Suitelets</span><span class="marquee-item">SOAP APIs</span><span class="marquee-item">Node.js</span><span class="marquee-item">React.js</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="s-label">01 / About</div>
+  <h2 class="s-title reveal">Who I Am</h2>
+  <div class="about-layout">
+    <div class="reveal-l">
+      <p class="big-text">I'm a <strong>B.Tech CSE graduate</strong> turned NetSuite specialist — bridging the gap between <strong>business logic</strong> and <strong>technical execution</strong>.<br/><br/>Based at <strong>Incalus, Mumbai</strong>, I've delivered end-to-end solutions for enterprise clients in <strong>Manufacturing</strong> and <strong>Healthcare</strong> — automating workflows, building integrations, and designing data pipelines that scale.</p>
+    </div>
+    <div class="about-right">
+      <div class="a-card reveal d1"><div class="a-card-top"><div class="a-icon" style="background:rgba(0,245,212,.1)">🎓</div><h4>Education</h4></div><p>B.Tech in Computer Science & Engineering — ICFAI University, Hyderabad (2019–2023). Programming foundation powering every customization.</p></div>
+      <div class="a-card reveal d2"><div class="a-card-top"><div class="a-icon" style="background:rgba(157,78,221,.1)">🏗️</div><h4>Approach</h4></div><p>I don't just code — I understand the business. From manufacturing workflows to healthcare ops, I tailor solutions that solve real problems.</p></div>
+      <div class="a-card reveal d3"><div class="a-card-top"><div class="a-icon" style="background:rgba(255,107,53,.1)">🚀</div><h4>Ambition</h4></div><p>Growing into a Senior Consultant role. Deep-diving SuiteScript 2.x, advanced certifications, and leading full-cycle implementations.</p></div>
+      <div class="a-card reveal d4"><div class="a-card-top"><div class="a-icon" style="background:rgba(6,255,165,.1)">✅</div><h4>Availability</h4></div><p>Available to join immediately. Open to relocation. Flexible across shifts. Ready to hit the ground running from day one.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="s-label">02 / Skills</div>
+  <h2 class="s-title reveal">Technical Stack</h2>
+  <p class="s-sub reveal">Full-spectrum ERP expertise spanning scripting, automation, integrations, and modern web development.</p>
+  <div class="skills-grid">
+    <div class="sk-card reveal d1"><div class="sk-icon" style="background:rgba(0,245,212,.1)">🔷</div><h4>NetSuite Core</h4><div class="tags"><span class="tag hot">SuiteScript 2.x</span><span class="tag hot">SuiteScript 1.0</span><span class="tag hot">SuiteFlow</span><span class="tag">Suitelets</span><span class="tag">Map/Reduce</span><span class="tag">Workflows</span><span class="tag">Saved Searches</span><span class="tag">KPIs</span></div><div class="skill-bar"><div class="skill-fill" style="background:linear-gradient(90deg,var(--cyan),var(--purple))" data-w="92"></div></div></div>
+    <div class="sk-card reveal d2"><div class="sk-icon" style="background:rgba(157,78,221,.1)">🔌</div><h4>Integrations</h4><div class="tags"><span class="tag hot">REST API</span><span class="tag hot">SOAP API</span><span class="tag hot">SFTP (N/sftp)</span><span class="tag">SSH Keys</span><span class="tag">CSV/XML</span><span class="tag">Third-party</span></div><div class="skill-bar"><div class="skill-fill" style="background:linear-gradient(90deg,var(--purple),var(--orange))" data-w="85"></div></div></div>
+    <div class="sk-card reveal d3"><div class="sk-icon" style="background:rgba(255,107,53,.1)">💻</div><h4>Languages</h4><div class="tags"><span class="tag hot">JavaScript</span><span class="tag hot">TypeScript</span><span class="tag">Python</span><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">MySQL</span><span class="tag">FreeMarker</span></div><div class="skill-bar"><div class="skill-fill" style="background:linear-gradient(90deg,var(--orange),var(--cyan))" data-w="88"></div></div></div>
+    <div class="sk-card reveal d4"><div class="sk-icon" style="background:rgba(6,255,165,.1)">⚡</div><h4>Frameworks</h4><div class="tags"><span class="tag">Angular</span><span class="tag">Node.js</span><span class="tag">React.js</span><span class="tag">Next.js</span><span class="tag">Adv. PDF/HTML</span></div><div class="skill-bar"><div class="skill-fill" style="background:linear-gradient(90deg,var(--green),var(--purple))" data-w="75"></div></div></div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="s-label">03 / Experience</div>
+  <h2 class="s-title reveal">Work History</h2>
+  <p class="s-sub reveal">Enterprise-grade solutions for real industries, real clients, real impact.</p>
+  <div class="exp-box reveal">
+    <div class="exp-header">
+      <div><div class="exp-co">Incalus</div><div class="exp-role">NetSuite Technical Consultant · Mumbai, India</div></div>
+      <span class="exp-date">2023 — Present</span>
+    </div>
+    <div class="clients">
+      <span class="client c1">🏭 Quanex — Manufacturing</span>
+      <span class="client c2">🏥 Carus — Healthcare</span>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-item"><p>Developed solutions using SuiteScript 1.0 and 2.x across both industry verticals</p></div>
+      <div class="exp-item"><p>Built Suitelets for custom UI forms and streamlined business process workflows</p></div>
+      <div class="exp-item"><p>Designed Map/Reduce scripts for high-volume data processing pipelines</p></div>
+      <div class="exp-item"><p>Integrated NetSuite with third-party systems via REST and SOAP APIs</p></div>
+      <div class="exp-item"><p>Developed SFTP integrations using N/sftp module with SSH key authentication</p></div>
+      <div class="exp-item"><p>Designed Advanced PDF/HTML Templates — Invoices, Sales Orders, POs, Packing Slips</p></div>
+      <div class="exp-item"><p>Created KPIs, Saved Searches, and Dashboards for actionable business insights</p></div>
+      <div class="exp-item"><p>Automated inbound/outbound file transfers between NetSuite and external systems</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="s-label">04 / Capabilities</div>
+  <h2 class="s-title reveal">What I Build</h2>
+  <p class="s-sub reveal">Core specializations across NetSuite implementation and enterprise customization.</p>
+  <div class="proj-grid">
+    <div class="proj-card reveal d1"><div class="proj-glow" style="background:var(--cyan)"></div><div class="proj-num">01</div><h3>ERP Automation</h3><p>Automating approval flows, business workflows, and record customization using SuiteFlow and SuiteScript at enterprise scale.</p><div class="stack"><span class="stk">SuiteScript 2.x</span><span class="stk">SuiteFlow</span><span class="stk">Map/Reduce</span></div></div>
+    <div class="proj-card reveal d2"><div class="proj-glow" style="background:var(--purple)"></div><div class="proj-num">02</div><h3>System Integrations</h3><p>Connecting NetSuite with external platforms via REST/SOAP APIs and SFTP for automated, bidirectional data flows.</p><div class="stack"><span class="stk">REST API</span><span class="stk">SOAP API</span><span class="stk">N/sftp</span></div></div>
+    <div class="proj-card reveal d3"><div class="proj-glow" style="background:var(--orange)"></div><div class="proj-num">03</div><h3>Document Design</h3><p>Branded, dynamic PDF/HTML templates with conditional rendering, corporate branding, logos, and barcodes.</p><div class="stack"><span class="stk">HTML/CSS</span><span class="stk">FreeMarker</span><span class="stk">Advanced PDF</span></div></div>
+    <div class="proj-card reveal d4"><div class="proj-glow" style="background:var(--green)"></div><div class="proj-num">04</div><h3>Business Intelligence</h3><p>KPIs, Saved Searches, and Dashboards that turn raw NetSuite data into actionable business insights.</p><div class="stack"><span class="stk">KPIs</span><span class="stk">Saved Searches</span><span class="stk">Dashboards</span></div></div>
+    <div class="proj-card reveal d5"><div class="proj-glow" style="background:var(--cyan)"></div><div class="proj-num">05</div><h3>Custom UI (Suitelets)</h3><p>Tailored UI portals and forms extending NetSuite's interface — user-friendly experiences within the ERP ecosystem.</p><div class="stack"><span class="stk">Suitelets</span><span class="stk">SuiteScript</span><span class="stk">JavaScript</span></div></div>
+    <div class="proj-card reveal d6"><div class="proj-glow" style="background:var(--purple)"></div><div class="proj-num">06</div><h3>Data Processing</h3><p>Map/Reduce pipelines for large-scale CSV/XML ingestion and transformation from SFTP servers, reliably and efficiently.</p><div class="stack"><span class="stk">Map/Reduce</span><span class="stk">CSV/XML</span><span class="stk">Scheduled Scripts</span></div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="s-label" style="justify-content:center">05 / Contact</div>
+    <h2 class="s-title reveal">Let's Build Together</h2>
+    <div class="avail reveal">Available to join immediately</div>
+    <p class="s-sub reveal" style="margin:0 auto;text-align:center">Open to senior consultant roles, new implementations, and exciting challenges. Flexible on location and shifts.</p>
+    <div class="c-links reveal">
+      <a href="tel:+919550418349" class="c-link mag"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.79 12a19.79 19.79 0 01-3-8.63A2 2 0 012.77 1.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9a16 16 0 006.09 6.09l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7a2 2 0 011.72 2.03z"/></svg>+91 9550418349</a>
+      <a href="/cdn-cgi/l/email-protection#2350424a0d534255424d121a634a454b464a4d474a420d4c5144" class="c-link mag"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Email Me</a>
+      <a href="https://www.linkedin.com/in/sai-pavan-2a5953225" target="_blank" class="c-link mag"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 <em>Siva Sai Pavan</em> — NetSuite Technical Consultant</p>
+  <p>Hyderabad / Mumbai <em>·</em> India</p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ═══════════════════════════════════
+   LOADER with counting number
+═══════════════════════════════════ */
+let pct = 0;
+const loaderNum = document.getElementById('loaderNum');
+const ldrIv = setInterval(() => {
+  pct += Math.random() * 12;
+  if (pct >= 100) { pct = 100; clearInterval(ldrIv); }
+  loaderNum.innerHTML = Math.floor(pct) + '<em>%</em>';
+}, 80);
+
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hide');
+    startCounters();
+    startTyped();
+    doScramble(document.getElementById('scr1'));
+    setInterval(() => doScramble(document.getElementById('scr1')), 7000);
+  }, 1600);
+});
+
+/* ═══════════════════════════════════
+   PARTICLE CANVAS
+═══════════════════════════════════ */
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H;
+const COLS = ['rgba(0,245,212,', 'rgba(157,78,221,', 'rgba(255,107,53,', 'rgba(6,255,165,'];
+const pts = [];
+
+function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+resize(); window.addEventListener('resize', resize);
+
+class P {
+  constructor() { this.init(); }
+  init() {
+    this.x = Math.random() * W; this.y = Math.random() * H;
+    this.r = Math.random() * 1.4 + 0.2;
+    this.vx = (Math.random() - .5) * .35; this.vy = (Math.random() - .5) * .35;
+    this.col = COLS[Math.floor(Math.random() * COLS.length)];
+    this.a = Math.random() * .45 + .08;
+    this.life = 0; this.max = Math.random() * 500 + 200;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy; this.life++;
+    if (this.life > this.max || this.x<0||this.x>W||this.y<0||this.y>H) this.init();
+  }
+  draw() {
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+    ctx.fillStyle = this.col + this.a + ')'; ctx.fill();
+  }
+}
+for (let i = 0; i < 130; i++) pts.push(new P());
+
+function drawLines() {
+  for (let i = 0; i < pts.length; i++) {
+    for (let j = i+1; j < pts.length; j++) {
+      const dx = pts[i].x-pts[j].x, dy = pts[i].y-pts[j].y;
+      const d = Math.sqrt(dx*dx+dy*dy);
+      if (d < 95) {
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(0,245,212,${.05*(1-d/95)})`;
+        ctx.lineWidth = .4;
+        ctx.moveTo(pts[i].x, pts[i].y);
+        ctx.lineTo(pts[j].x, pts[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+// Mouse repel
+let mx2 = -999, my2 = -999;
+document.addEventListener('mousemove', e => { mx2 = e.clientX; my2 = e.clientY; });
+
+function loop() {
+  ctx.clearRect(0, 0, W, H);
+  pts.forEach(p => {
+    const dx = p.x - mx2, dy = p.y - my2;
+    const d = Math.sqrt(dx*dx+dy*dy);
+    if (d < 80) { p.vx += dx/d * .15; p.vy += dy/d * .15; }
+    p.vx *= .99; p.vy *= .99;
+    p.update(); p.draw();
+  });
+  drawLines();
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* ═══════════════════════════════════
+   MAGNETIC CURSOR
+═══════════════════════════════════ */
+const cur = document.getElementById('cur');
+const trail = document.getElementById('cur-trail');
+let cx=0, cy=0, tx=0, ty=0, hovered=false;
+
+document.addEventListener('mousemove', e => {
+  tx = e.clientX; ty = e.clientY;
+  cur.style.left = tx+'px'; cur.style.top = ty+'px';
+});
+
+(function animCur() {
+  cx += (tx-cx) * .1; cy += (ty-cy) * .1;
+  trail.style.left = cx+'px'; trail.style.top = cy+'px';
+  requestAnimationFrame(animCur);
+})();
+
+document.querySelectorAll('a,button,.sk-card,.proj-card,.a-card,.exp-item').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cur.style.width='20px'; cur.style.height='20px';
+    cur.style.background='var(--purple)';
+    trail.style.width='60px'; trail.style.height='60px';
+    trail.style.borderColor='rgba(157,78,221,.4)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cur.style.width='10px'; cur.style.height='10px';
+    cur.style.background='var(--cyan)';
+    trail.style.width='40px'; trail.style.height='40px';
+    trail.style.borderColor='rgba(0,245,212,.35)';
+  });
+});
+
+/* Magnetic effect on buttons */
+document.querySelectorAll('.mag').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const r = btn.getBoundingClientRect();
+    const bx = e.clientX - r.left - r.width/2;
+    const by = e.clientY - r.top - r.height/2;
+    btn.style.transform = `translate(${bx*.18}px,${by*.18}px)`;
+  });
+  btn.addEventListener('mouseleave', () => btn.style.transform='');
+});
+
+/* ═══════════════════════════════════
+   PARALLAX ORBS ON MOUSEMOVE
+═══════════════════════════════════ */
+document.addEventListener('mousemove', e => {
+  const mx = (e.clientX/innerWidth-.5)*25;
+  const my = (e.clientY/innerHeight-.5)*25;
+  document.querySelectorAll('.orb').forEach((o,i) => {
+    const d = (i+1)*.45;
+    o.style.transform = `translate(${mx*d}px,${my*d}px)`;
+  });
+});
+
+/* ═══════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════ */
+const revEls = document.querySelectorAll('.reveal,.reveal-l,.reveal-r');
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, {threshold:.08});
+revEls.forEach(el => revObs.observe(el));
+
+/* ═══════════════════════════════════
+   SKILL BAR FILL
+═══════════════════════════════════ */
+const barObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const f = e.target.querySelector('.skill-fill');
+      if (f) setTimeout(() => f.style.width = f.dataset.w+'%', 350);
+    }
+  });
+}, {threshold:.3});
+document.querySelectorAll('.sk-card').forEach(el => barObs.observe(el));
+
+/* ═══════════════════════════════════
+   COUNTER ANIMATION
+═══════════════════════════════════ */
+function startCounters() {
+  document.querySelectorAll('.cnum').forEach(el => {
+    const to = +el.dataset.to;
+    let n = 0, step = to/40;
+    const iv = setInterval(() => {
+      n += step;
+      if (n >= to) { n=to; clearInterval(iv); }
+      el.textContent = Math.floor(n);
+    }, 30);
+  });
+}
+
+/* ═══════════════════════════════════
+   TEXT SCRAMBLE
+═══════════════════════════════════ */
+const chars = '!<>-_\\/[]{}—=+*^?#█▓▒░│';
+function doScramble(el) {
+  const txt = el.textContent;
+  let iter = 0;
+  const iv = setInterval(() => {
+    el.textContent = txt.split('').map((c,i) => {
+      if (i < iter) return txt[i];
+      if (c===' ') return ' ';
+      return chars[Math.floor(Math.random()*chars.length)];
+    }).join('');
+    iter += .5;
+    if (iter >= txt.length) clearInterval(iv);
+  }, 30);
+}
+
+/* ═══════════════════════════════════
+   TYPED TEXT
+═══════════════════════════════════ */
+const lines = ['for Manufacturing & Healthcare','with SuiteScript 2.x','via REST & SOAP APIs','that scales with you'];
+let si=0, ci=0, del=false;
+const typedEl = document.getElementById('typed');
+function startTyped() {
+  if (!typedEl) return;
+  function tick() {
+    const cur2 = lines[si];
+    if (!del) {
+      typedEl.textContent = cur2.slice(0,++ci);
+      if (ci===cur2.length) { del=true; setTimeout(tick,2000); return; }
+    } else {
+      typedEl.textContent = cur2.slice(0,--ci);
+      if (ci===0) { del=false; si=(si+1)%lines.length; }
+    }
+    setTimeout(tick, del?45:75);
+  }
+  tick();
+}
+
+/* ═══════════════════════════════════
+   PROJECT CARD GLOW FOLLOW
+═══════════════════════════════════ */
+document.querySelectorAll('.proj-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.background = `radial-gradient(280px at ${e.clientX-r.left}px ${e.clientY-r.top}px,rgba(0,245,212,.05),var(--card) 80%)`;
+  });
+  card.addEventListener('mouseleave', () => card.style.background='');
+});
+
+/* ═══════════════════════════════════
+   NAV SCROLL
+═══════════════════════════════════ */
+const navEl = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  navEl.style.background = scrollY>60 ? 'rgba(4,6,10,.97)':'rgba(4,6,10,.8)';
+  const secs = document.querySelectorAll('section[id]');
+  const navAs = document.querySelectorAll('.nav-links a');
+  let ac='';
+  secs.forEach(s => { if(scrollY >= s.offsetTop-250) ac=s.id; });
+  navAs.forEach(a => a.style.color = a.getAttribute('href')==='#'+ac ? 'var(--cyan)':'');
+});
+
+/* ═══════════════════════════════════
+   TILT ON ABOUT CARDS
+═══════════════════════════════════ */
+document.querySelectorAll('.a-card,.sk-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX-r.left)/r.width-.5;
+    const y = (e.clientY-r.top)/r.height-.5;
+    card.style.transform = `translateX(${card.classList.contains('a-card')
